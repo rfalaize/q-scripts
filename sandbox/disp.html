@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>Dispersion</title>
+</head>
+
+<body onload="connect();">
+	<textarea id="txtInput" placeholder="q)"></textarea>
+	<button id="cmdInput" onclick="send();">Go</button>
+	<div id="txtOutput"></div>
+
+	<script>
+		var ws, cmd = "";
+		var input = document.getElementById("txtInput");
+		var output = document.getElementById("txtOutput");
+
+		function connect() {
+			if ("WebSocket" in window) {
+				ws = new WebSocket("ws://localhost:5000/");
+				Console.log("Connecting...");
+				ws.onopen = function(e) {
+					output.innerHTML = "connected";
+				}
+				ws.onclose = function(e) {
+					output.innerHTML = "disconnected";
+				}
+				ws.onmessage = function(e) {
+					output.innerHTML = cmd + e.data.replace(/ /g, '&nbsp').replace(/\n/g, '<br />') +
+						output.innerHTML;
+					cmd = "";
+				}
+				ws.onerror = function(e) {
+					out.value = e.data;
+				}
+			} else alert("WebSockets not supported on your browser.");
+		}
+
+		function send() {
+			cmd = "q)" + input.value + "<br />";
+			ws.send(input.value);
+			input.value = "";
+			input.focus();
+		}
+	</script>
+
+	<style>
+	</style>
+
+</body>
+
+</html>
