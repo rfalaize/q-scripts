@@ -24,12 +24,15 @@
  (`Xr`Xi)!(Xr;Xi)};
 
  /inverse discrete fourier transform
+ /inputs:
+ /  X: a ditionary of amplitudes and phases, resulting from .math.dft
+ /  nbpoints: number of points to compute. If 0,
  /example:
  /	Compute inverse fourier transform
  /		.math.idft .math.dft[1 2 0 -1f;0]
  /	Verify that composition of dft and its inverse idft gives the original input
  /		{x~.math.idft .math.dft[x;0]}[1 2 0 -1 3 5f]
-.math.idft:{[X]
- Xr:X[`Xr];Xi:X[`Xi];N:count Xr;`pi set acos -1;
- r:{[Xr;Xi;N;n]freq:(2*pi%N)*n*til N;(1%N)*sum (Xr*cos[freq])-Xi*sin[freq]}[Xr;Xi;N;]each til N;
+.math.idft:{[X;nbpoints]
+ Xr:X[`Xr];Xi:X[`Xi];N:count Xr;if[nbpoints=0;nbpoints:N];`pi set acos -1;
+ r:{[Xr;Xi;N;n]freq:(2*pi%N)*n*til N;(1%N)*sum (Xr*cos[freq])-Xi*sin[freq]}[Xr;Xi;N;]each til nbpoints;
  .math.rnd[1e-6;]r};
